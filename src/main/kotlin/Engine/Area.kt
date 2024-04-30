@@ -34,6 +34,9 @@ open class Area(
     }
 
     override fun onKeyEvent(keyEvent: KeyEvent) {
+        sorted.forEach{
+            it.onKeyEvent(keyEvent)
+        }
     }
 
     override fun onMouseMove(pointerEvent: PointerEvent) {

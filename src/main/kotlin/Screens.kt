@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key
@@ -22,8 +23,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 
-class MenuScreen(private val game: MyGame): Screen() {
+class MenuScreen(game: MyGame): Screen(
+    game
+) {
+    @Composable
+    override fun create() {
 
+    }
     @Composable
     override fun render() {
         Box(modifier = Modifier.fillMaxSize()){
@@ -64,11 +70,6 @@ class MenuScreen(private val game: MyGame): Screen() {
         }
     }
 
-    @Composable
-    override fun create() {
-
-    }
-
     override fun update(delta: Long) {
 
     }
@@ -84,26 +85,30 @@ class MenuScreen(private val game: MyGame): Screen() {
     }
 
 }
-class GameScreen(val game: MyGame): Screen(){
-
-    private val playArea = PlayArea()
-
+class GameScreen(
+    game: MyGame
+): Screen(
+    game,
+    areas = mutableListOf(
+        PlayArea()
+    ),
+    currentArea = mutableStateOf(PlayArea())
+){
     @Composable
     override fun create() {
-        playArea.create()
+        super.create()
     }
-
     @Composable
     override fun render() {
-        playArea.render()
+        super.render()
     }
 
     override fun update(delta: Long) {
-        playArea.update(delta)
+        super.update(delta)
     }
 
     override fun onKeyEvent(keyEvent: KeyEvent) {
-        playArea.onKeyEvent(keyEvent)
+        currentArea?.value?.onKeyEvent(keyEvent)
     }
 
     override fun onMouseMove(pointerEvent: PointerEvent) {
@@ -176,6 +181,7 @@ class MyEnt(): Entity(
     }
 
     override fun onKeyEvent(keyEvent: KeyEvent) {
+        super.onKeyEvent(keyEvent)
     }
 
     override fun onMouseMove(pointerEvent: PointerEvent) {

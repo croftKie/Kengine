@@ -9,11 +9,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 
-class MyGame() : Game() {
+class MyGame() : Game(
+
+) {
     private var menu = MenuScreen(this)
     private var playArea = GameScreen(this )
 
-    var currentGameState = mutableStateOf(Enums.GameState.MENU)
+    override var currentGameState = mutableStateOf(Enums.GameState.MENU)
     override var screens: MutableList<Screen> = mutableListOf(
         menu, playArea
     )
