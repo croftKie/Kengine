@@ -1,5 +1,6 @@
 import Engine.Area
 import Engine.Entity
+import Engine.Interfaces.MovementXY
 import Engine.Prefabs.Rect
 import Engine.Prefabs.Sprite
 import Engine.Screen
@@ -12,8 +13,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -69,8 +73,14 @@ class MenuScreen(private val game: MyGame): Screen() {
 
     }
 
-    override fun onKeyEvent(keyEvent: KeyEvent): Boolean {
-        return super.onKeyEvent(keyEvent)
+    override fun onKeyEvent(keyEvent: KeyEvent) {
+
+    }
+
+    override fun onMouseMove(pointerEvent: PointerEvent) {
+    }
+
+    override fun onMouseEnter(pointerEvent: PointerEvent) {
     }
 
 }
@@ -90,6 +100,16 @@ class GameScreen(val game: MyGame): Screen(){
 
     override fun update(delta: Long) {
         playArea.update(delta)
+    }
+
+    override fun onKeyEvent(keyEvent: KeyEvent) {
+        playArea.onKeyEvent(keyEvent)
+    }
+
+    override fun onMouseMove(pointerEvent: PointerEvent) {
+    }
+
+    override fun onMouseEnter(pointerEvent: PointerEvent) {
     }
 }
 
@@ -121,10 +141,20 @@ class PlayArea(
             entities[1].setIsGrounded(true)
         }
     }
+
+    override fun onKeyEvent(keyEvent: KeyEvent) {
+        entities[1].onKeyEvent(keyEvent)
+    }
+
+    override fun onMouseMove(pointerEvent: PointerEvent) {
+    }
+
+    override fun onMouseEnter(pointerEvent: PointerEvent) {
+    }
 }
 
 class MyEnt(): Entity(
-    resource = "mon.png",
+    resource = "Kenji.png",
     startX = 10.dp,
     startY = 10.dp
 ){
@@ -144,13 +174,22 @@ class MyEnt(): Entity(
     override fun update(delta: Long) {
         super.update(delta)
     }
+
+    override fun onKeyEvent(keyEvent: KeyEvent) {
+    }
+
+    override fun onMouseMove(pointerEvent: PointerEvent) {
+    }
+
+    override fun onMouseEnter(pointerEvent: PointerEvent) {
+    }
 }
 
 class MyEnt2(): Entity(
-    resource = "mon.png",
+    resource = "Kenji.png",
     startX = 40.dp,
     startY = 10.dp
-){
+), MovementXY{
     @Composable
     override fun create() {
         super.create()
@@ -162,13 +201,35 @@ class MyEnt2(): Entity(
     override fun render() {
         super.render()
         Sprite.draw(this)
-        this.offsetBL = listOf(0.dp, (-40).dp)
-        this.offsetBR = listOf(0.dp, (-40).dp)
+        this.offsetBL = listOf(0.dp, (-25).dp)
+        this.offsetBR = listOf(0.dp, (-25).dp)
     }
 
     override fun update(delta: Long) {
         super.update(delta)
     }
+
+    override fun onKeyEvent(keyEvent: KeyEvent) {
+        keyDownLeft(keyEvent, Key.A){
+            this.setPosition(DpOffset(
+                x = this.getPosition().x - 8.dp,
+                y = this.getPosition().y
+            ))
+        }
+        keyDownRight(keyEvent, Key.D){
+            this.setPosition(DpOffset(
+                x = this.getPosition().x + 8.dp,
+                y = this.getPosition().y
+            ))
+        }
+    }
+
+    override fun onMouseMove(pointerEvent: PointerEvent) {
+    }
+
+    override fun onMouseEnter(pointerEvent: PointerEvent) {
+    }
+
 }
 
 class Floor(): Entity(
@@ -188,5 +249,14 @@ class Floor(): Entity(
 
     override fun update(delta: Long) {
         super.update(delta)
+    }
+
+    override fun onKeyEvent(keyEvent: KeyEvent) {
+    }
+
+    override fun onMouseMove(pointerEvent: PointerEvent) {
+    }
+
+    override fun onMouseEnter(pointerEvent: PointerEvent) {
     }
 }

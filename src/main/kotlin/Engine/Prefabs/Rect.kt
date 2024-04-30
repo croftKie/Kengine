@@ -19,8 +19,8 @@ object Rect: Prefab {
             modifier = Modifier
                 .offset(entity.getPosition().x,
                     entity.getPosition().y)
-                .background(Color.Blue)
-                .height(10.dp)
+                .background(Color.Black)
+                .height(100.dp)
                 .fillMaxWidth()
         )
         return Rect

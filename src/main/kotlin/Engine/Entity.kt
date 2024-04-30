@@ -7,6 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
@@ -186,6 +188,15 @@ open class Entity(
 
     open fun setZIndex(zIndex: Int): Unit {
         _zIndex.value = zIndex
+    }
+
+    override fun onKeyEvent(keyEvent: KeyEvent) {
+    }
+
+    override fun onMouseMove(pointerEvent: PointerEvent) {
+    }
+
+    override fun onMouseEnter(pointerEvent: PointerEvent) {
     }
 
 

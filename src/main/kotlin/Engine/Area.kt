@@ -3,6 +3,8 @@ package Engine
 import Engine.Interfaces.Input
 import Engine.Interfaces.Renderable
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.pointer.PointerEvent
 
 open class Area(
     val entities: MutableList<Entity> = mutableListOf()
@@ -29,5 +31,14 @@ open class Area(
         sorted.forEach {
             it.update(delta)
         }
+    }
+
+    override fun onKeyEvent(keyEvent: KeyEvent) {
+    }
+
+    override fun onMouseMove(pointerEvent: PointerEvent) {
+    }
+
+    override fun onMouseEnter(pointerEvent: PointerEvent) {
     }
 }
