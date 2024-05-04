@@ -1,11 +1,8 @@
-import Engine.Area
-import Engine.Entity
-import Engine.Interfaces.MovementXY
-import Engine.Prefabs.Rect
-import Engine.Prefabs.Sprite
-import Engine.Screen
-import Engine.Utils.Collision
-import Engine.Utils.Enums
+import Kengine.Application
+import Kengine.Screen
+import Kengine.Utils.Collision
+import Kengine.Utils.Enums
+import Kengine.Utils.Keys
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -18,18 +15,16 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 
-class MenuScreen(game: MyGame): Screen(
-    game
-) {
+class MenuScreen(app: Application): Screen(app) {
+
     @Composable
     override fun create() {
-
+        super.create()
     }
+
     @Composable
     override fun render() {
         Box(modifier = Modifier.fillMaxSize()){
@@ -57,7 +52,7 @@ class MenuScreen(game: MyGame): Screen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Button(onClick = {
-                            game.currentGameState.value = Enums.GameState.PLAYING
+                            app.currentScreen.value = app.screens.values.toList()[1]
                         }){
                             Text("Start")
                         }
@@ -69,63 +64,21 @@ class MenuScreen(game: MyGame): Screen(
             }
         }
     }
-
-    override fun update(delta: Long) {
-
-    }
-
-    override fun onKeyEvent(keyEvent: KeyEvent) {
-
-    }
-
-    override fun onMouseMove(pointerEvent: PointerEvent) {
-    }
-
-    override fun onMouseEnter(pointerEvent: PointerEvent) {
-    }
-
 }
-class GameScreen(
-    game: MyGame
-): Screen(
-    game,
-    areas = mutableListOf(
-        PlayArea()
-    ),
-    currentArea = mutableStateOf(PlayArea())
-){
-    @Composable
-    override fun create() {
-        super.create()
-    }
-    @Composable
-    override fun render() {
-        super.render()
-    }
-
-    override fun update(delta: Long) {
-        super.update(delta)
-    }
-
-    override fun onKeyEvent(keyEvent: KeyEvent) {
-        currentArea?.value?.onKeyEvent(keyEvent)
-    }
-
-    override fun onMouseMove(pointerEvent: PointerEvent) {
-    }
-
-    override fun onMouseEnter(pointerEvent: PointerEvent) {
-    }
-}
-
-class PlayArea(
-): Area(
-    entities = mutableListOf(
-    MyEnt(),
-    MyEnt2(),
-    Floor()
+class GameScreen(app: Application): Screen(
+    app,
+    entities = mutableMapOf(
+        "background" to Background(app),
+        "bookshelf" to BookShelf(app),
+        "bed" to Bed(app),
+        "player" to MyEnt2(app),
+        "floor" to Floor(app)
     )
 ){
+    private val player = this.getEntity("player")
+    private val floor = this.getEntity("floor")
+    private val bookShelf = this.getEntity("bookshelf")
+    private val bed = this.getEntity("bed")
 
     @Composable
     override fun create() {
@@ -137,132 +90,25 @@ class PlayArea(
         super.render()
     }
 
-    override fun update(delta: Long) {
+    override fun update(delta: Float) {
         super.update(delta)
-        Collision.overlaps(entities[0], entities[2]){
-            entities[0].setIsGrounded(true)
+
+        Collision.overlaps(player, floor){
+            player.setIsGrounded(true)
         }
-        Collision.overlaps(entities[1], entities[2]){
-            entities[1].setIsGrounded(true)
+        Collision.overlaps(player, bookShelf){
+            println("You should go to sleep, Kenji!")
         }
-    }
 
-    override fun onKeyEvent(keyEvent: KeyEvent) {
-        entities[1].onKeyEvent(keyEvent)
-    }
-
-    override fun onMouseMove(pointerEvent: PointerEvent) {
-    }
-
-    override fun onMouseEnter(pointerEvent: PointerEvent) {
-    }
-}
-
-class MyEnt(): Entity(
-    resource = "Kenji.png",
-    startX = 10.dp,
-    startY = 10.dp
-){
-    @Composable
-    override fun create() {
-        super.create()
-        this.setGravity(true)
-        this.setZIndex(1)
-    }
-
-    @Composable
-    override fun render() {
-        super.render()
-        Sprite.draw(this)
-    }
-
-    override fun update(delta: Long) {
-        super.update(delta)
     }
 
     override fun onKeyEvent(keyEvent: KeyEvent) {
         super.onKeyEvent(keyEvent)
-    }
-
-    override fun onMouseMove(pointerEvent: PointerEvent) {
-    }
-
-    override fun onMouseEnter(pointerEvent: PointerEvent) {
-    }
-}
-
-class MyEnt2(): Entity(
-    resource = "Kenji.png",
-    startX = 40.dp,
-    startY = 10.dp
-), MovementXY{
-    @Composable
-    override fun create() {
-        super.create()
-        this.setGravity(true)
-        this.setZIndex(2)
-    }
-
-    @Composable
-    override fun render() {
-        super.render()
-        Sprite.draw(this)
-        this.offsetBL = listOf(0.dp, (-25).dp)
-        this.offsetBR = listOf(0.dp, (-25).dp)
-    }
-
-    override fun update(delta: Long) {
-        super.update(delta)
-    }
-
-    override fun onKeyEvent(keyEvent: KeyEvent) {
-        keyDownLeft(keyEvent, Key.A){
-            this.setPosition(DpOffset(
-                x = this.getPosition().x - 8.dp,
-                y = this.getPosition().y
-            ))
-        }
-        keyDownRight(keyEvent, Key.D){
-            this.setPosition(DpOffset(
-                x = this.getPosition().x + 8.dp,
-                y = this.getPosition().y
-            ))
+        Keys.keyDown(keyEvent, Key.Spacebar){
+            if(Collision.overlaps(player, bed)){
+                app.currentScreen.value = app.screens["menu"]
+            }
         }
     }
-
-    override fun onMouseMove(pointerEvent: PointerEvent) {
-    }
-
-    override fun onMouseEnter(pointerEvent: PointerEvent) {
-    }
-
 }
 
-class Floor(): Entity(
-    startX = 0.dp,
-    startY = 400.dp
-){
-    @Composable
-    override fun create() {
-        super.create()
-    }
-
-    @Composable
-    override fun render() {
-        super.render()
-        Rect.draw(this)
-    }
-
-    override fun update(delta: Long) {
-        super.update(delta)
-    }
-
-    override fun onKeyEvent(keyEvent: KeyEvent) {
-    }
-
-    override fun onMouseMove(pointerEvent: PointerEvent) {
-    }
-
-    override fun onMouseEnter(pointerEvent: PointerEvent) {
-    }
-}

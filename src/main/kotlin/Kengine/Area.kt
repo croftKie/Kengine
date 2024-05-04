@@ -1,18 +1,21 @@
-package Engine
+package Kengine
 
-import Engine.Interfaces.Input
-import Engine.Interfaces.Renderable
+import Kengine.Interfaces.Input
+import Kengine.Interfaces.Renderable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.pointer.PointerEvent
 
 open class Area(
-    val entities: MutableList<Entity> = mutableListOf()
+    val entities: MutableMap<String, Entity> = mutableMapOf()
 ): Renderable, Input {
-
-    private var sorted: MutableList<Entity> = entities.sortedBy {
+    private var sorted: MutableList<Entity> = entities.values.toList().sortedBy {
         it.getZIndex()
     }.toMutableList()
+
+    open fun getEntity(name: String): Entity{
+        return entities[name]!!
+    }
 
     @Composable
     override fun create() {
@@ -27,7 +30,7 @@ open class Area(
         }
     }
 
-    override fun update(delta: Long) {
+    override fun update(delta: Float) {
         sorted.forEach {
             it.update(delta)
         }

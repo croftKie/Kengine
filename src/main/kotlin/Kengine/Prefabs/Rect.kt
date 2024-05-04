@@ -1,7 +1,9 @@
-package Engine.Prefabs
+package Kengine.Prefabs
 
-import Engine.Entity
-import Engine.Interfaces.Prefab
+import Kengine.Application
+import Kengine.Entity
+import Kengine.Interfaces.Game
+import Kengine.Interfaces.Prefab
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,15 +16,18 @@ import androidx.compose.ui.unit.dp
 
 object Rect: Prefab {
     @Composable
-    override fun draw(entity: Entity): Prefab {
-        Box(
+    override fun draw(entity: Entity) {
+        return Box(
             modifier = Modifier
                 .offset(entity.getPosition().x,
                     entity.getPosition().y)
-                .background(Color.Black)
                 .height(100.dp)
                 .fillMaxWidth()
         )
+    }
+    @Composable
+    override fun draw(entity: Entity, app: Application): Prefab {
         return Rect
     }
+
 }

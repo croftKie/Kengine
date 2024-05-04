@@ -1,12 +1,11 @@
-package Engine.Interfaces
+package Kengine.Interfaces
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.Dp
 
 interface Renderable {
     @Composable
     fun create()
     @Composable
     fun render()
-    fun update(delta: Long)
+    fun update(delta: Float)
 }

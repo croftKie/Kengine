@@ -1,4 +1,4 @@
-package Engine.Interfaces
+package Kengine.Interfaces
 
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.pointer.PointerEvent
